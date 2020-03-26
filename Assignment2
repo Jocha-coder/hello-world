@@ -1,0 +1,9 @@
+#include<stdio.h>
+typedef struct BiTree
+{
+  struct BiTree* lchild;
+  struct BiTree* rchild;
+}*Bitree;
+int main()
+{
+}
