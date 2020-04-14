@@ -1,0 +1,409 @@
+#include<iostream>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<conio.h>
+using namespace std;
+
+typedef struct Device {
+	char number[9];
+	char name[20];
+	char model[20];
+	int  price;
+	char date[20];
+	char recipient[20];
+	char condition[20];
+	char note[200];
+	struct Device* next;
+}device;
+
+
+device* head = new device;//head->next=NULL;
+device* p2 = head;
+FILE* fp2, * fp1;
+
+void Input();//输入函数
+void Display();//显示函数 
+void Modify();//修改函数 
+void Find();//查找函数 
+void File();
+void Delete();//删除函数 
+
+int main()
+{
+
+	if ((fp1 = fopen_s("device.txt", "r")) == NULL)
+	{
+		printf("无法打开文件\n");
+		exit(0);
+	}
+	char Number[9];
+	char Name[20];
+	char Model[20];
+	int  Price;
+	char Date[20];
+	char Recipient[20];
+	char Condition[20];
+	char Note[200];
+
+	while (!feof(fp1))
+	{
+		fscanf_s(fp1, "%s %s %s %d %s %s %s %s", Number, Name, Model, Price, Date, Recipient, Condition, Note);
+		device* p1 = new device;
+		p1->next = NULL;
+		strcpy_s(p1->number, Number); strcpy_s(p1->name, Name); strcpy_s(p1->model, Model); p1->price = Price; strcpy_s(p1->date, Date); strcpy_s(p1->recipient, Recipient); strcpy_s(p1->condition, Condition); strcpy_s(p1->note, Note);
+		p2->next = p1;
+		p2 = p1;
+	}
+	fclose(fp1);
+
+	char i;
+	cout << "                                      *****************" << "多媒体教室设备管理信息菜单" << "****************" << endl;
+	cout << "                                       **********" << "按a 选择输入新的设备信息" << "******" << endl;
+	cout << "                                     **********" << "  按b 选择显示当前所有的设备信息" << "******" << endl;
+	cout << "                                       **********" << "按c 选择修改当前设备信息" << "******" << endl;
+	cout << "                                       **********" << "按d 选择查找当前设备信息" << "******" << endl;
+	cout << "                                       **********" << "按e 选择清空当前页面信息" << "******" << endl;
+	cout << "                                       **********" << "按f 选择把当前所有设备信息保存到文件" << endl;
+	cout << "                                       **********" << "按g 选择删除某一设备的所有信息" << endl;
+	cout << "                                            ***********" << "按h 结束退出" << "******" << endl;
+	cout << "                                           *******" << "Please select a to h" << "******" << endl;
+	cout << "                                   ********************************************************" << endl;
+	while (1)
+	{
+		//system("cls");
+		cout << "请输入要选择的信息功能编号：" << endl;
+		cin >> i;
+		if (i == 'h')break;
+		else switch (i)
+		{
+		case 'a': Input(); break;
+		case 'b': Display(); break;
+		case 'c': Modify(); break;
+		case 'd': Find(); break;
+		case 'e': system("cls");
+		case 'f': File(); break;
+		case 'g': Delete(); break;
+		}
+		cout << "\n";
+	}
+}
+
+void Delete()
+{
+	cout << "请输入要删除的设备编号：";
+	device* p1 = head->next;
+	device* p2 = head;
+	char Num[9];
+	cin >> Num;
+	int i = 0;
+	while (p1)
+	{
+		if (strcmp(p1->number, Num) == 0)
+		{
+			i++;
+			break;
+		}
+		p2 = p1;
+		p1 = p1->next;
+	}
+	if (i == 0)
+	{
+		cout << "该设备不存在" << endl;
+	}
+	else
+	{
+
+		p2->next = p1->next;
+		free(p1);
+		cout << "该设备所有信息已删除" << endl;
+	}
+}
+
+void File()
+{
+	if ((fp2 = fopen_s("device.txt", "w")) == NULL)
+	{
+		printf("无法打开文件\n");
+		exit(0);
+	}
+	device* p4 = head->next;
+	while (p4)
+	{
+		fprintf(fp2, "%s %s %s %d %s %s %s %s\n", p4->number, p4->name, p4->model, p4->price, p4->date, p4->recipient, p4->condition, p4->note);
+		p4 = p4->next;
+	}
+	fclose(fp2);
+}
+void Input()
+{
+	device* p0 = new device;
+	cout << "请输入要添加设备的信息" << endl;
+	cin >> p0->number >> p0->name >> p0->model >> p0->price >> p0->date >> p0->recipient >> p0->condition >> p0->note;
+	if (head->next == NULL)
+	{
+		head->next = p0;
+		p0->next = NULL;
+		p2 = p0;
+	}
+	else
+	{
+		p2->next = p0;
+		p0->next = NULL;
+		p2 = p0;
+	}
+}
+
+void Display()
+{
+	cout << "当前所有设备信息为：" << endl;
+	device* p1 = head->next;
+	if (p1 == NULL)
+	{
+		cout << "无设备" << endl;
+	}
+	else
+	{
+		while (p1)
+		{
+			cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+			p1 = p1->next;
+		}
+	}
+}
+
+void Modify()
+{
+	cout << "请输入你要修改设备信息的编号：";
+	char num[9];
+	cin >> num;
+	cout << "该设备的当前信息为：" << endl;
+	device* p3;
+	p3 = head->next;
+	while (p3)
+	{
+		if (strcmp(p3->number, num) == 0)break;
+		p3 = p3->next;
+	}
+	cout << p3->number << " " << p3->name << " " << p3->model << " " << p3->price << " " << p3->date << " " << p3->recipient << " " << p3->condition << " " << p3->note << endl;
+	cout << "                                         *******************" << "修改信息菜单*************" << endl;
+	cout << "                                       *******************" << "修改设备编号请按1************" << endl;
+	cout << "                                        ***************" << "修改设备型号规格请按2************" << endl;
+	cout << "                                           ***************" << "修改设备单价请按3*************" << endl;
+	cout << "                                        ****************" << "修改设备购入日期请按4***********" << endl;
+	cout << "                                       *******************" << "修改设备领用人请按5***********" << endl;
+	cout << "                                        *****************" << "修改设备使用状况请按6**********" << endl;
+	cout << "                                       ******************" << "修改设备备注请按7**************" << endl;
+	cout << "                                       *******************" << "修改仪器名称请按8*************" << endl;
+	cout << "                                       *********************" << "结束修改请按0***************" << endl;
+	int choice;
+	char  number1[9];
+	char name1[20];
+	char model1[20];
+	int  price1;
+	char date1[20];
+	char recipient1[20];
+	char condition1[20];
+	char note1[200];
+	while (1)
+	{
+		cout << "请输入要修改的设备信息菜单编号：" << endl;
+		cin >> choice;
+		if (choice == 0)
+		{
+			cout << "修改信息结束" << endl;
+			break;
+		}
+		else if (choice == 1)
+		{
+			cout << "请输入新的设备编号：" << " ";
+			cin >> number1;
+			strcpy_s(p3->number, number1);
+			//cout<<"\n";
+		}
+		else if (choice == 2)
+		{
+			cout << "请输入新的设备型号规格：" << " ";
+			cin >> model1;
+			strcpy_s(p3->model, model1);
+			//cout<<"\n";
+		}
+		else if (choice == 3)
+		{
+			cout << "请输入新的设备单价：" << " ";
+			cin >> price1;
+			p3->price = price1;
+			//cout<<"\n";
+		}
+		else if (choice == 4)
+		{
+			cout << "请输入新的设备购入日期：" << " ";
+			cin >> date1;
+			strcpy_s(p3->date, date1);
+			//cout<<"\n";
+		}
+		else if (choice == 5)
+		{
+			cout << "请输入新的领用人信息：" << " ";
+			cin >> recipient1;
+			strcpy_s(p3->recipient, recipient1);
+			//cout<<"\n";
+		}
+		else if (choice == 6)
+		{
+			cout << "请输入设备状况信息：" << " ";
+			cin >> condition1;
+			strcpy_s(p3->condition, condition1);
+			//cout<<"\n";
+		}
+		else if (choice == 7)
+		{
+			cout << "请输入设备备注信息：" << " ";
+			cin >> note1;
+			strcpy_s(p3->note, note1);
+			//cout<<"\n";
+		}
+		else if (choice == 8)
+		{
+			cout << "请输入设备新名称：" << " ";
+			cin >> name1;
+			strcpy_s(p3->name, name1);
+		}
+		else
+		{
+			cout << "输入信息有误，请重新输入" << endl;
+		}
+	}
+	cout << "修改后设备信息为：" << endl;
+	cout << p3->number << " " << p3->name << " " << p3->model << " " << p3->price << " " << p3->date << " " << p3->recipient << " " << p3->condition << " " << p3->note << endl;
+}
+
+void Find()
+{
+	int k;
+	device* p1 = head->next;
+	cout << "                                            ********************" << "查询信息菜单********************" << endl;
+	cout << "                                             ***************" << "通过设备编号查询请按1***************" << endl;
+	cout << "                                             ***************" << "通过设备单价查询请按2**************" << endl;
+	cout << "                                             *************" << "通过设备购入日期查询请按3************" << endl;
+	cout << "                                             **************" << "通过设备领用人查询请按4**************" << endl;
+	cout << "                                             **************" << "通过仪器名称查询请按5****************" << endl;
+	cout << "                                             ********************" << "结束查询请按0*****************" << endl;
+	int choice;
+	char number1[9];
+	char name1[20];
+	int  price1;
+	char date1[20];
+	char recipient1[20];
+	while (1)
+	{
+		k = 0;
+		p1 = head->next;
+		cout << "请输入查询数字：" << endl;
+		cin >> choice;
+		if (choice == 0)
+		{
+			cout << "查询结束" << endl; break;
+		}
+		else if (choice == 1)
+		{
+			cout << "请输入设备编号:";
+			cin >> number1;
+			while (p1)
+			{
+				if (strcmp(p1->number, number1) == 0)
+				{
+					k++;
+					cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+				}
+				p1 = p1->next;
+			}
+			if (k == 0)
+			{
+				cout << "该设备不存在"; break;
+			}
+		}
+		else if (choice == 2)
+		{
+			cout << "请输入设备单价:";
+			cin >> price1;
+			while (p1)
+			{
+				if (p1->price == price1)
+				{
+					k++;
+					cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+				}
+				p1 = p1->next;
+			}
+			if (k == 0)
+			{
+				cout << "该设备不存在"; break;
+			}
+		}
+		else if (choice == 3)
+		{
+			cout << "请输入设备购入日期：";
+			cin >> date1;
+			while (p1)
+			{
+				if (strcmp(p1->date, date1) == 0)
+				{
+					k++;
+					cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+				}
+				p1 = p1->next;
+			}
+			if (k == 0)
+			{
+				cout << "该设备不存在"; break;
+			}
+		}
+		else if (choice == 4)
+		{
+			cout << "请输入设备领用人：";
+			cin >> recipient1;
+			while (p1)
+			{
+				if (strcmp(p1->recipient, recipient1) == 0)
+				{
+					k++;
+					cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+				}
+				p1 = p1->next;
+			}
+			if (k == 0)
+			{
+				cout << "该设备不存在"; break;
+			}
+
+		}
+		else if (choice == 5)
+		{
+			cout << "请输入设备名称：";
+			cin >> name1;
+			while (p1)
+			{
+				if (strcmp(p1->name, name1) == 0)
+				{
+					k++;
+					cout << p1->number << " " << p1->name << " " << p1->model << " " << p1->price << " " << p1->date << " " << p1->recipient << " " << p1->condition << " " << p1->note << endl;
+				}
+				p1 = p1->next;
+
+			}
+			if (k == 0)
+			{
+				cout << "该设备不存在"; break;
+			}
+		}
+		else
+		{
+			cout << "输入查询数字有误，请重新输入" << endl;
+
+		}
+	}
+	cout << "\n";
+}
+
+
