@@ -20,7 +20,7 @@ typedef struct Device {
 
 device* head = new device;//head->next=NULL;
 device* p2 = head;
-FILE* fp2, * fp1;
+FILE* fp2, * fp1;//头节点设为全局变量
 
 void Input();//输入函数
 void Display();//显示函数 
@@ -32,7 +32,7 @@ void Delete();//删除函数
 int main()
 {
 
-	if ((fp1 = fopen_s("device.txt", "r")) == NULL)
+	if ((fp1 = fopen_s("device.txt", "r")) == NULL)//
 	{
 		printf("无法打开文件\n");
 		exit(0);
