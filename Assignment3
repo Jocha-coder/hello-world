@@ -32,7 +32,7 @@ void Delete();//删除函数
 int main()
 {
 
-	if ((fp1 = fopen_s("device.txt", "r")) == NULL)//
+	if ((fp1 = fopen_s("device.txt", "r")) == NULL)  //把文件中原来存在的设备信息写入程序
 	{
 		printf("无法打开文件\n");
 		exit(0);
@@ -69,7 +69,7 @@ int main()
 	cout << "                                            ***********" << "按h 结束退出" << "******" << endl;
 	cout << "                                           *******" << "Please select a to h" << "******" << endl;
 	cout << "                                   ********************************************************" << endl;
-	while (1)
+	while (1)   //通过while循环选择对应模块
 	{
 		//system("cls");
 		cout << "请输入要选择的信息功能编号：" << endl;
@@ -137,10 +137,10 @@ void File()
 }
 void Input()
 {
-	device* p0 = new device;
+	device* p0 = new device;       //头节点是全局变量，申请一个新的节点，存要添加的设备信息
 	cout << "请输入要添加设备的信息" << endl;
 	cin >> p0->number >> p0->name >> p0->model >> p0->price >> p0->date >> p0->recipient >> p0->condition >> p0->note;
-	if (head->next == NULL)
+	if (head->next == NULL)        //如果当前为设备，则P0节点连接到头节点后
 	{
 		head->next = p0;
 		p0->next = NULL;
@@ -278,10 +278,10 @@ void Modify()
 	cout << p3->number << " " << p3->name << " " << p3->model << " " << p3->price << " " << p3->date << " " << p3->recipient << " " << p3->condition << " " << p3->note << endl;
 }
 
-void Find()
+void Find()    
 {
 	int k;
-	device* p1 = head->next;
+	device* p1 = head->next;    //head是全局变量，申请一个p1指针，指向head下一个结点
 	cout << "                                            ********************" << "查询信息菜单********************" << endl;
 	cout << "                                             ***************" << "通过设备编号查询请按1***************" << endl;
 	cout << "                                             ***************" << "通过设备单价查询请按2**************" << endl;
@@ -309,7 +309,7 @@ void Find()
 		{
 			cout << "请输入设备编号:";
 			cin >> number1;
-			while (p1)
+			while (p1)         //遍历链表，查询满足条件的设备
 			{
 				if (strcmp(p1->number, number1) == 0)
 				{
