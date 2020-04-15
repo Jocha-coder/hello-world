@@ -6,14 +6,14 @@
 using namespace std;
 
 typedef struct Device {
-	char number[9];
-	char name[20];
-	char model[20];
-	int  price;
-	char date[20];
-	char recipient[20];
-	char condition[20];
-	char note[200];
+	char number[9];     //设备编号
+	char name[20];      //设备名称
+	char model[20];     //设备模式
+	int  price;         //价格
+	char date[20];      //日期
+	char recipient[20]; //租借人信息
+	char condition[20]; //设备情况
+	char note[200];     //设备信息
 	struct Device* next;
 }device;
 
@@ -89,7 +89,7 @@ int main()
 	}
 }
 
-void Delete()
+void Delete()   //删除设备信息模块
 {
 	cout << "请输入要删除的设备编号：";
 	device* p1 = head->next;
@@ -97,7 +97,7 @@ void Delete()
 	char Num[9];
 	cin >> Num;
 	int i = 0;
-	while (p1)
+	while (p1)    //通过链表遍历找到要删除的设备
 	{
 		if (strcmp(p1->number, Num) == 0)
 		{
@@ -135,7 +135,7 @@ void File()
 	}
 	fclose(fp2);
 }
-void Input()
+void Input()   //添加设备信息
 {
 	device* p0 = new device;       //头节点是全局变量，申请一个新的节点，存要添加的设备信息
 	cout << "请输入要添加设备的信息" << endl;
@@ -154,7 +154,7 @@ void Input()
 	}
 }
 
-void Display()
+void Display()  //显示设备信息
 {
 	cout << "当前所有设备信息为：" << endl;
 	device* p1 = head->next;
@@ -278,7 +278,7 @@ void Modify()
 	cout << p3->number << " " << p3->name << " " << p3->model << " " << p3->price << " " << p3->date << " " << p3->recipient << " " << p3->condition << " " << p3->note << endl;
 }
 
-void Find()    
+void Find()    //查询设备信息
 {
 	int k;
 	device* p1 = head->next;    //head是全局变量，申请一个p1指针，指向head下一个结点
